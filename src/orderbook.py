@@ -9,7 +9,6 @@ class OrderBook:
     def initialize_orderbook(self):
         self.bid_order_page = OrderPage('BID')
         self.ask_order_page = OrderPage('ASK')
-        
         return
 
 class OrderPage:
