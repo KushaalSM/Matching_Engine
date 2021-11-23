@@ -16,7 +16,6 @@ class MatchingEngine:
         return
 
     def check_limit_order_match(self):
-        
         bid_price, bid_quantity = self.orderbook.get_best_qoutes(quote_type='BID')
         ask_price, ask_quantity = self.orderbook.get_best_qoutes(quote_type='ASK')
         if bid_price >= ask_price:
