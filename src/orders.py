@@ -125,11 +125,14 @@ class NewOrder(Order):
 
 class CancelOrder(Order):
     order_request_contents = {
-        'order_id': int
+        'order_id': int,
+        'direction': str
     }
+    direction_choices = ['BUY', 'SELL']
 
     def __init__(self, order_request_dict) -> None:
         super().__init__()
         self.order_purpose = 'CANCEL'
+        self.direction = None
         super()._verify_and_set_order_request(order_request_dict)
         self._verify_and_set_order_request(order_request_dict)

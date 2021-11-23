@@ -11,6 +11,19 @@ class OrderBook:
         self.ask_order_page = OrderPage('ASK')
         return
 
+    def on_new_order(self, order):
+        order_type = 'bid' if order.direction == 'BUY' else 'ask'
+        self.__getattribute__(f"{order_type}_order_page").on_new_order(order)
+        return
+
+    def get_best_qoutes(self, quote_type):
+        if not quote_type in ['BID', 'ASK']:
+            raise ValueError(f"Invalid quote_type {quote_type}")
+        return self.__getattribute__(f"{quote_type.lower()}_order_page").get_best_level_info()
+
+    def execute(self):
+        return
+
 class OrderPage:
     """
     This holds all the order levels for bid/ask sorted in price priority.
@@ -29,6 +42,10 @@ class OrderPage:
     def _update_best_level(self):
         self.best_price_level = (min if self.page_type == 'ASK' else max)(self.order_level_dict)
         return
+
+    def get_best_level_info(self):
+        quantity_at_best_price = self.order_level_dict[self.best_price_level].combined_quantity
+        return self.best_price_level, quantity_at_best_price
     
     def on_new_order(self, order):
         order_price = order.price
