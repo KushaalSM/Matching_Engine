@@ -1,6 +1,13 @@
 import datetime as dt
 from random import randint
 
+def create_order(order_request_dict):
+    if order_request_dict['purpose'] == 'NEW':
+        return NewOrder(order_request_dict)
+    if order_request_dict['purpose'] == 'CANCEL':
+        return CancelOrder(order_request_dict)
+    raise Exception(f"Invalid purpose {order_request_dict['purpose']}")
+
 class Order:
     order_request_contents = {
         'client_id': int,
