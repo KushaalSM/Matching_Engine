@@ -59,11 +59,12 @@ class OrderPage:
             self.order_level_dict[order_price].delete_order(order.order_id)
         return
 
-    def _add_order_level(self, price, order):
-        self.order_level_dict[price] = OrderLevel(order)
+    def _add_order_level(self, price):
+        self.order_level_dict[price] = OrderLevel(price)
         return
 
-    def _delete_order_level(self):
+    def _delete_order_level(self, price):
+        self.order_level_dict.pop(price)
         return
 
 class OrderLevel:
@@ -72,18 +73,18 @@ class OrderLevel:
     The orders are sorted based on the order placement times.
     All new orders are appended to the list and filled orders are popped from the beginning of the list.
     """
-    def __init__(self, order) -> None:
+    def __init__(self, price) -> None:
         # List of Order objects sorted by arrival_time.
-        self.order_list = [order]
+        self.order_list = []
 
         # Set the price of this orderlevel.
-        self.price = order.price
+        self.price = price
 
         # Total quantity of all orders at this price level.
-        self.combined_quantity = order.display_quantity
+        self.combined_quantity = 0
 
         # Number of different orders at this price level.
-        self.number_of_orders = 1
+        self.number_of_orders = 0
     
     def add_order(self, order):
         """
@@ -110,6 +111,7 @@ class OrderLevel:
                 self.order_list.pop(idx)
                 self.number_of_orders -= 1
                 break
+            idx += 1
         if not order_found:
             # raise Exception(f"Order with the order_id {order_id} not present.")
             pass
@@ -128,6 +130,7 @@ class OrderLevel:
             fill_quantity = min(quantity_to_match, order.display_quantity)
             quantity_to_match -= fill_quantity
             order._update_filled_quantity(fill_quantity)
+            self.combined_quantity -= fill_quantity
             if quantity_to_match == 0:
                 break
         # Post order fill tasks.
